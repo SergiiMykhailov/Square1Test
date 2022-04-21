@@ -10,7 +10,7 @@ import Foundation
 public protocol MainViewModelProtocol: AnyObject {
 
     var searchText: String { get set }
-    var onCitiesCountLoaded: OnCitiesCountLoadedCallback? { get set }
+    var onCitiesCountUpdated: OnCitiesCountLoadedCallback? { get set }
     var totalCitiesCount: Int? { get }
 
     func loadCityInfo(atIndex index: Int, completion: @escaping OnCityLoadedCallback)
@@ -29,10 +29,10 @@ public class MainViewModel: MainViewModelProtocol {
 
     public var searchText: String = "" {
         didSet {
-            reload()
+            scheduleReload()
         }
     }
-    public var onCitiesCountLoaded: OnCitiesCountLoadedCallback?
+    public var onCitiesCountUpdated: OnCitiesCountLoadedCallback?
     public var totalCitiesCount: Int?
 
     public init(
@@ -57,12 +57,23 @@ public class MainViewModel: MainViewModelProtocol {
 
     // MARK: - Internal methods
 
+    private func scheduleReload() {
+        reloadDelayTimer?.invalidate()
+
+        reloadDelayTimer = Timer.scheduledTimer(
+            withTimeInterval: Constants.typingDelay,
+            repeats: false,
+            block: { [weak self] _ in
+                self?.reload()
+            })
+    }
+
     private func reload() {
         currentCitiesRepository = repositoriesFactory.makeRepository(withSearchText: searchText)
         
         currentCitiesRepository?.loadTotalItemsCount(completion: { [weak self] itemsCount in
             self?.totalCitiesCount = itemsCount
-            self?.onCitiesCountLoaded?(itemsCount)
+            self?.onCitiesCountUpdated?(itemsCount)
         })
     }
 
@@ -70,5 +81,10 @@ public class MainViewModel: MainViewModelProtocol {
 
     private let repositoriesFactory: CitiesRepositoryFactoryProtocol
     private var currentCitiesRepository: CitiesRepositoryProtocol?
+    private var reloadDelayTimer: Timer?
+
+    private enum Constants {
+        static let typingDelay: TimeInterval = 0.5
+    }
 
 }

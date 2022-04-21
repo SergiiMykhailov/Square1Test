@@ -15,7 +15,7 @@ class MainViewController: UIViewController {
     public func configure(withViewModel viewModel: MainViewModelProtocol) {
         self.viewModel = viewModel
 
-        viewModel.onCitiesCountLoaded = { citiesCount in
+        viewModel.onCitiesCountUpdated = { citiesCount in
             DispatchQueue.main.async { [weak self] in
                 self?.collectionView.reloadData()
                 self?.reloadMap()
@@ -148,5 +148,14 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
             width: collectionView.frame.width,
             height: Constants.cellHeight
         )
+    }
+}
+
+extension MainViewController: UISearchBarDelegate {
+    func searchBar(
+        _ searchBar: UISearchBar,
+        textDidChange searchText: String
+    ) {
+        viewModel?.searchText = searchText
     }
 }

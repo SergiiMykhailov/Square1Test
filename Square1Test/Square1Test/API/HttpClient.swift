@@ -18,7 +18,7 @@ public class HttpClient {
     ) {
         var url = Constants.baseUrl + Constants.endpointCity + "?include=country&page=\(pageIndex)"
         if !searchString.isEmpty {
-            url += "filter[0][name][contains]=\(searchString)"
+            url += "&filter[0][name][contains]=\(searchString)"
         }
 
         let task = URLSession.shared.dataTask(
