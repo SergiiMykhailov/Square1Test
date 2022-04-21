@@ -9,3 +9,4 @@ import Foundation
 
 public typealias OnCitiesCountLoadedCallback = (Int) -> Void
 public typealias OnCityLoadedCallback = (CityInfo?) -> Void
+public typealias OnCitiesBatchLoadedCallback = ([CityInfo], Int) -> Void

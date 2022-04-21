@@ -17,8 +17,10 @@ class MainViewController: UIViewController,
     public func configure(withViewModel viewModel: MainViewModelProtocol) {
         self.viewModel = viewModel
 
-        viewModel.onCitiesCountLoaded = { [weak self] citiesCount in
-            self?.collectionView.reloadData()
+        viewModel.onCitiesCountLoaded = { citiesCount in
+            DispatchQueue.main.async { [weak self] in
+                self?.collectionView.reloadData()
+            }
         }
     }
 
@@ -32,7 +34,7 @@ class MainViewController: UIViewController,
     // MARK: - UICollectionViewDataSource implementation
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel != nil ? viewModel!.totalCitiesCount : 0
+        return viewModel?.totalCitiesCount != nil ? viewModel!.totalCitiesCount! : 0
     }
 
     func collectionView(
