@@ -17,7 +17,7 @@ class MainViewController: UIViewController,
     public func configure(withViewModel viewModel: MainViewModelProtocol) {
         self.viewModel = viewModel
 
-        viewModel.onCitiesLoaded = { [weak self] citiesCount in
+        viewModel.onCitiesCountLoaded = { [weak self] citiesCount in
             self?.collectionView.reloadData()
         }
     }

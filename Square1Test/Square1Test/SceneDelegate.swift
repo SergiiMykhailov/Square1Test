@@ -19,7 +19,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let _ = (scene as? UIWindowScene) else { return }
 
         if let mainViewController = self.window?.rootViewController as? MainViewController {
-            mainViewController.configure(withViewModel: MainViewModel())
+            mainViewController.configure(
+                withViewModel: MainViewModel(withRepositoriesFactory: Environment.repositoriesFactory)
+            )
         }
     }
 
