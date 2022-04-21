@@ -56,6 +56,10 @@
                                                 </collectionViewCellContentView>
                                             </collectionViewCell>
                                         </cells>
+                                        <connections>
+                                            <outlet property="dataSource" destination="BYZ-38-t0r" id="efh-e3-yOa"/>
+                                            <outlet property="delegate" destination="BYZ-38-t0r" id="nAA-sO-nR1"/>
+                                        </connections>
                                     </collectionView>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>

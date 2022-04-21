@@ -8,15 +8,38 @@
 import MapKit
 import UIKit
 
-class MainViewController: UIViewController {
+class MainViewController: UIViewController,
+                          UICollectionViewDataSource,
+                          UICollectionViewDelegate {
 
     // MARK: - Public methods and properties
+
+    public func configure(withViewModel viewModel: MainViewModelProtocol) {
+        self.viewModel = viewModel
+
+        viewModel.onCitiesLoaded = { [weak self] citiesCount in
+            self?.collectionView.reloadData()
+        }
+    }
 
     // MARK: - Overridden methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+    }
+
+    // MARK: - UICollectionViewDataSource implementation
+
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return viewModel != nil ? viewModel!.totalCitiesCount : 0
+    }
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        cellForItemAt indexPath: IndexPath
+    ) -> UICollectionViewCell {
+        return UICollectionViewCell()
     }
 
     // MARK: - Outlets
@@ -39,6 +62,8 @@ class MainViewController: UIViewController {
     }
 
     // MARK: - Internal fields
+
+    private var viewModel: MainViewModelProtocol?
 
     private enum Constants {
         static let mapSegmentIndex = 1
