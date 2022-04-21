@@ -18,6 +18,7 @@ class MainViewController: UIViewController {
         viewModel.onCitiesCountLoaded = { citiesCount in
             DispatchQueue.main.async { [weak self] in
                 self?.collectionView.reloadData()
+                self?.reloadMap()
             }
         }
     }
@@ -31,6 +32,36 @@ class MainViewController: UIViewController {
             UINib(nibName: Constants.cellXibName, bundle: nil),
             forCellWithReuseIdentifier: Constants.cellIdentifier
         )
+    }
+
+    // MARK: - Internal methods
+
+    private func reloadMap() {
+        guard let totalItemsCount = viewModel?.totalCitiesCount else {
+            return
+        }
+
+        mapView.removeAnnotations(mapView.annotations)
+
+        for itemIndex in 0..<totalItemsCount {
+            viewModel?.loadCityInfo(
+                atIndex: itemIndex,
+                completion: { [weak self] loadedCity in
+                    guard let self = self, let loadedCity = loadedCity else {
+                        return
+                    }
+
+                    let annotation = MKPointAnnotation()
+                    annotation.coordinate = CLLocationCoordinate2D(
+                        latitude: CLLocationDegrees(loadedCity.latitude),
+                        longitude: CLLocationDegrees(loadedCity.longitude)
+                    )
+                    annotation.title = loadedCity.name
+
+                    self.mapView.addAnnotation(annotation)
+                }
+            )
+        }
     }
 
     // MARK: - Outlets
