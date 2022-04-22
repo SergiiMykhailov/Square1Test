@@ -81,12 +81,27 @@ extension CoreDataCitiesLocalStorage: CitiesLocalStorageProtocol {
                     in: context
                 )!
 
-            let person = NSManagedObject(entity: entity, insertInto: context)
+            var person: NSManagedObject?
+            let fetchRequest = NSFetchRequest<NSManagedObject>(
+                entityName: DatabaseConstants.cityEntityName
+            )
+            fetchRequest.predicate = NSPredicate(
+                format: "\(DatabaseConstants.idField) = %@",
+                city.id
+            )
 
-            person.setValue(city.id, forKeyPath: DatabaseConstants.idField)
-            person.setValue(city.name, forKeyPath: DatabaseConstants.nameField)
-            person.setValue(city.latitude, forKeyPath: DatabaseConstants.latitudeField)
-            person.setValue(city.longitude, forKeyPath: DatabaseConstants.longitudeField)
+            let fetchResult = try? context.fetch(fetchRequest)
+            if let fetchResult = fetchResult, !fetchResult.isEmpty {
+                person = fetchResult.first
+            }
+            else {
+                person = NSManagedObject(entity: entity, insertInto: context)
+            }
+
+            person!.setValue(city.id, forKeyPath: DatabaseConstants.idField)
+            person!.setValue(city.name, forKeyPath: DatabaseConstants.nameField)
+            person!.setValue(city.latitude, forKeyPath: DatabaseConstants.latitudeField)
+            person!.setValue(city.longitude, forKeyPath: DatabaseConstants.longitudeField)
 
             do {
                 try context.save()

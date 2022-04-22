@@ -70,8 +70,16 @@ public class DefaultCitiesRepository: CitiesRepositoryProtocol {
                 self.processPendingCallbacks()
 
                 let isLoadingCompleted = self.loadedCities.count == totalItems
-                if !isLoadingCompleted {
+                if !isLoadingCompleted && !loadedCitiesBatch.isEmpty {
                     self.loadRemainingBatches()
+                }
+
+                if loadedCitiesBatch.isEmpty {
+                    // There may be a case when total items count which was
+                    // retrieved during the 1st page loading is wrong
+                    // and at some point we start retrieving empty batches.
+                    // In this case we may detect that there is actually no more data.
+                    self.totalItemsCount = self.loadedCities.count
                 }
             }
     }
@@ -139,7 +147,7 @@ public class DefaultCitiesRepository: CitiesRepositoryProtocol {
     private var totalItemsCount: Int?
     private var totalItemsCountPendingCallbacks = [OnCitiesCountLoadedCallback]()
     private var loadedCities = [CityInfo]()
-    private var lastLoadedPageIndex = -1
+    private var lastLoadedPageIndex = 0
     private var pendingCityLoadCallbacks = [Int: OnCityLoadedCallback]()
 
 }
