@@ -14,9 +14,10 @@ class Environment {
 }
 
 class DefaultCitiesRepositoriesFactory: CitiesRepositoryFactoryProtocol {
-
     func makeRepository(withSearchText searchText: String) -> CitiesRepositoryProtocol {
-        return DefaultCitiesRepository(withSearchString: searchText)
+        DefaultCitiesRepository(
+            withSearchString: searchText,
+            localStorage: CoreDataCitiesLocalStorage()
+        )
     }
-
 }

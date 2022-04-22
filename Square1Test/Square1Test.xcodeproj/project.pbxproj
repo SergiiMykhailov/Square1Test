@@ -25,6 +25,7 @@
 		02F6FCAD2811D348003D7984 /* HttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02F6FCAC2811D348003D7984 /* HttpClient.swift */; };
 		02F6FCB128120252003D7984 /* MainViewControllerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02F6FCB028120252003D7984 /* MainViewControllerCell.swift */; };
 		02F6FCB32812026B003D7984 /* MainViewControllerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02F6FCB22812026B003D7984 /* MainViewControllerCell.xib */; };
+		02F6FCB6281292F7003D7984 /* CitiesLocalStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02F6FCB5281292F7003D7984 /* CitiesLocalStorage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +68,7 @@
 		02F6FCAC2811D348003D7984 /* HttpClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpClient.swift; sourceTree = "<group>"; };
 		02F6FCB028120252003D7984 /* MainViewControllerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewControllerCell.swift; sourceTree = "<group>"; };
 		02F6FCB22812026B003D7984 /* MainViewControllerCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainViewControllerCell.xib; sourceTree = "<group>"; };
+		02F6FCB5281292F7003D7984 /* CitiesLocalStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitiesLocalStorage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +119,7 @@
 		02F6FC6728117B0B003D7984 /* Square1Test */ = {
 			isa = PBXGroup;
 			children = (
+				02F6FCB4281292D0003D7984 /* LocalStorage */,
 				02F6FC9F28117C47003D7984 /* UI */,
 				02F6FC9E28117C33003D7984 /* ViewModels */,
 				02F6FC9D28117C1B003D7984 /* Repository */,
@@ -224,6 +227,14 @@
 				02F6FCB22812026B003D7984 /* MainViewControllerCell.xib */,
 			);
 			path = MainViewControllerCell;
+			sourceTree = "<group>";
+		};
+		02F6FCB4281292D0003D7984 /* LocalStorage */ = {
+			isa = PBXGroup;
+			children = (
+				02F6FCB5281292F7003D7984 /* CitiesLocalStorage.swift */,
+			);
+			path = LocalStorage;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -366,6 +377,7 @@
 				02F6FC6928117B0B003D7984 /* AppDelegate.swift in Sources */,
 				02F6FCAB28119666003D7984 /* Environment.swift in Sources */,
 				02F6FCA728118B1C003D7984 /* CitiesRepository.swift in Sources */,
+				02F6FCB6281292F7003D7984 /* CitiesLocalStorage.swift in Sources */,
 				02F6FC7328117B0B003D7984 /* Square1Test.xcdatamodeld in Sources */,
 				02F6FCA5281183EE003D7984 /* CityInfo.swift in Sources */,
 				02F6FC6B28117B0B003D7984 /* SceneDelegate.swift in Sources */,

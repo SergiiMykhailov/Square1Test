@@ -18,10 +18,16 @@ public class DefaultCitiesRepository: CitiesRepositoryProtocol {
 
     // MARK: - Public methods and properties
 
-    public init(withSearchString searchString: String) {
+    public init(
+        withSearchString searchString: String,
+        localStorage: CitiesLocalStorageProtocol? = nil
+    ) {
         self.searchString = searchString
+        self.localStorage = localStorage
 
-        loadRemainingBatches()
+        loadFromLocalStorage { [weak self] in
+            self?.loadRemainingBatches()
+        }
     }
 
     public func loadTotalItemsCount(completion: @escaping OnCitiesCountLoadedCallback) {
@@ -51,12 +57,16 @@ public class DefaultCitiesRepository: CitiesRepositoryProtocol {
                 }
 
                 self.lastLoadedPageIndex += 1
-                self.loadedCities.append(contentsOf: loadedCitiesBatch)
+                for loadedCity in loadedCitiesBatch {
+                    self.loadedCities.removeAll(where: { $0.id == loadedCity.id })
+                    self.loadedCities.append(loadedCity)
+                }
 
                 if self.totalItemsCount == nil {
                     self.totalItemsCount = totalItems
                 }
 
+                self.saveCitiesToLocalStorage(loadedCitiesBatch)
                 self.processPendingCallbacks()
 
                 let isLoadingCompleted = self.loadedCities.count == totalItems
@@ -64,6 +74,38 @@ public class DefaultCitiesRepository: CitiesRepositoryProtocol {
                     self.loadRemainingBatches()
                 }
             }
+    }
+
+    private func loadFromLocalStorage(completion: VoidCallback?) {
+        guard let localStorage = localStorage else {
+            completion?()
+            return
+        }
+
+        localStorage.loadCities(whereTitleContains: searchString) { [weak self] cities, error in
+            if let error = error {
+                print("Failed to load cities from local storage.\nError: \(error.localizedDescription)")
+            }
+            else {
+                self?.loadedCities = cities
+            }
+
+            completion?()
+        }
+    }
+
+    private func saveCitiesToLocalStorage(_ cities: [CityInfo]) {
+        guard let localStorage = localStorage else {
+            return
+        }
+
+        for city in cities {
+            localStorage.save(city: city, completion: { error in
+                if let error = error {
+                    print("Failed to store city localy. \nError: \(error.localizedDescription)")
+                }
+            })
+        }
     }
 
     private func processPendingCallbacks() {
@@ -92,6 +134,8 @@ public class DefaultCitiesRepository: CitiesRepositoryProtocol {
     // MARK: - Internal fields
 
     private let searchString: String
+    private let localStorage: CitiesLocalStorageProtocol?
+
     private var totalItemsCount: Int?
     private var totalItemsCountPendingCallbacks = [OnCitiesCountLoadedCallback]()
     private var loadedCities = [CityInfo]()
