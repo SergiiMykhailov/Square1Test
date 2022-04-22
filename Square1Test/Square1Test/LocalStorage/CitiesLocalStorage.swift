@@ -57,7 +57,8 @@ extension CoreDataCitiesLocalStorage: CitiesLocalStorageProtocol {
 
             do {
                 let requestedCities = try context.fetch(fetchRequest)
-                let result = type(of: self).cityInfoList(fromManagedObjects: requestedCities)
+                let allCities = type(of: self).cityInfoList(fromManagedObjects: requestedCities)
+                let result = allCities.filter({ $0.name.lowercased().contains(searchString.lowercased()) })
 
                 completion(result, nil)
             } catch let error as NSError {
@@ -70,8 +71,9 @@ extension CoreDataCitiesLocalStorage: CitiesLocalStorageProtocol {
         city: CityInfo,
         completion: @escaping LocalStorageCityStoreCallback
     ) {
-        DispatchQueue.main.async {
-            guard let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext else {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self,
+                  let context = type(of: self).context else {
                 return
             }
 
@@ -110,6 +112,10 @@ extension CoreDataCitiesLocalStorage: CitiesLocalStorageProtocol {
                 completion(error)
             }
         }
+    }
+
+    private static var context: NSManagedObjectContext? {
+        (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext
     }
 
     private static func cityInfoList(
