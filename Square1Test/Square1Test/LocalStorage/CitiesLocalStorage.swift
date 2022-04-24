@@ -28,6 +28,13 @@ public protocol CitiesLocalStorageProtocol {
 
 public class CoreDataCitiesLocalStorage {
 
+    public static let shared = CoreDataCitiesLocalStorage()
+
+    // MARK: - Internal methods
+
+    private init() {
+    }
+
     // MARK: - Internal fields
 
     private enum DatabaseConstants {

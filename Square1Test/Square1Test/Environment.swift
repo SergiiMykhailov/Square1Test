@@ -17,7 +17,7 @@ class DefaultCitiesRepositoriesFactory: CitiesRepositoryFactoryProtocol {
     func makeRepository(withSearchText searchText: String) -> CitiesRepositoryProtocol {
         DefaultCitiesRepository(
             withSearchString: searchText,
-            localStorage: CoreDataCitiesLocalStorage()
+            localStorage: CoreDataCitiesLocalStorage.shared
         )
     }
 }
